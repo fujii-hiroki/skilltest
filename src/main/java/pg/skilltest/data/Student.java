@@ -31,16 +31,9 @@ public class Student {
 	private final static int SCIENCE_SCORE_INDEX = 5;
 
 	/**
-	 * デフォルトコンストラクタは直接呼ばない
-	 */
-	private Student() {
-	}
-
-	/**
 	 * CSVデータ1行分からコンストラクト
 	 */
 	public Student(String csvRecord) {
-		this();
 		this.csvRecord = csvRecord;
 	}
 
@@ -104,7 +97,7 @@ public class Student {
 	}
 
 	/**
-	 * ヘッダかどうか。
+	 * ヘッダかどうか
 	 */
 	private final static String HEADER_PREFIX = "group,";
 	public boolean isHeader() {

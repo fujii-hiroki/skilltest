@@ -27,9 +27,7 @@ public class TimetableService {
 	 * 形式は Timetable#getCsvRecord() による。
 	 */
 	public List<String> getCsvData() {
-		return getTimetableList().stream()
-		  .map(s -> s.getCsvRecord())
-			.collect(Collectors.toList());
+		return fileManager.readTimetableCsv();
 	}
 
 	/**

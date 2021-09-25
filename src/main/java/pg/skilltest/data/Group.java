@@ -20,16 +20,9 @@ public class Group {
 	private double scienceScore = 0;
 
 	/**
-	 * デフォルトコンストラクタは直接呼ばない
-	 */
-	private Group() {
-	}
-
-	/**
 	 * コンストラクタ
 	 */
 	public Group(String group) {
-		this();
 		this.group = group;
 	}
 

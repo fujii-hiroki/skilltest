@@ -23,8 +23,7 @@ public class ScoreController {
 	@RequestMapping("/score/total")
 	public ModelAndView total(ModelAndView mv) {
 		List<String> list = service.getTotalScores();
-		String result = String.join("<br>", list);
-		mv.addObject("unsanitizedResult", result);
+		mv.addObject("unsanitizedResult", join(list));
 
 		mv.setViewName("score");
 		return mv;
@@ -33,8 +32,7 @@ public class ScoreController {
 	@RequestMapping("/score/average")
 	public ModelAndView average(ModelAndView mv) {
 		List<String> list = service.getAverageScores();
-		String result = String.join("<br>", list);
-		mv.addObject("unsanitizedResult", result);
+		mv.addObject("unsanitizedResult", join(list));
 
 		mv.setViewName("score");
 		return mv;
@@ -43,12 +41,16 @@ public class ScoreController {
 	@RequestMapping("/score/ranking")
 	public ModelAndView ranking(ModelAndView mv) {
 		List<String> list = service.getRanking();
-		String result = String.join("<br>", list);
-		mv.addObject("unsanitizedResult", result);
+		mv.addObject("unsanitizedResult", join(list));
 
 		mv.setViewName("score");
 		return mv;
 	}
 
-	
+	/**
+	 * <br>で連結する
+	 */
+	private String join(List<String> list) {
+		return String.join("<br>", list);
+	}
 }

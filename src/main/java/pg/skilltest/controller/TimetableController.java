@@ -28,8 +28,7 @@ public class TimetableController {
 	@RequestMapping("/timetable/csv")
 	public ModelAndView csv(ModelAndView mv) {
 		List<String> list = service.getCsvData();
-		String result = String.join("<br>", list);
-		mv.addObject("unsanitizedResult", result);
+		mv.addObject("unsanitizedResult", join(list));
 
 		mv.setViewName("timetable");
 		return mv;
@@ -42,9 +41,10 @@ public class TimetableController {
 	) {
 		if(date != null) {
 			List<String> list = service.getByDate(date);
-			String result = String.join("<br>", list);
-			mv.addObject("unsanitizedResult", result);
+			mv.addObject("unsanitizedResult", join(list));
 			mv.addObject("initialDate", date.toString());
+		} else {
+			mv.addObject("result", "不正なパラメータ");
 		}
 
 		mv.setViewName("timetable");
@@ -59,14 +59,21 @@ public class TimetableController {
 	) {
 		if(time != null) {
 			List<String> list = service.getRecent(weekdayValue, time);
-			String result = String.join("<br>", list);
-			mv.addObject("unsanitizedResult", result);
+			mv.addObject("unsanitizedResult", join(list));
 			mv.addObject("initialWeekday", weekdayValue);
 			mv.addObject("initialTime", time.toString());
+		} else {
+			mv.addObject("result", "不正なパラメータ");
 		}
 
 		mv.setViewName("timetable");
 		return mv;
 	}
 	
+	/**
+	 * <br>で連結する
+	 */
+	private String join(List<String> list) {
+		return String.join("<br>", list);
+	}
 }

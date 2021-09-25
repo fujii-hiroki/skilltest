@@ -5,8 +5,12 @@
 	<meta charset="UTF-8">
   <title>点数</title>
   <style>
+    .toplink {
+      margin-bottom: 1rem;
+    }
     .header {
       border-bottom: 1px #eee solid;
+      padding-bottom: 0.5rem;
     }
     .header a {
       margin: 0;
@@ -43,10 +47,14 @@
 </head>
 
 <body>
+
+  <div class="toplink">
+    <a href="/">TOPへ</a>
+  </div>
+
   <div class="header">
     <a class="title" href="/score">点数課題</a>
     <img th:src="@{/score.png}">
-    <a href="/" style="float:right;">TOPへ</a>
   </div>
 
   <div class="pane-wrapper left-pane">

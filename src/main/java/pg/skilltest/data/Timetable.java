@@ -27,17 +27,10 @@ public class Timetable {
 	private final static int MINUTE_INDEX = 2;
 
 	/**
-	 * デフォルトコンストラクタは直接呼ばない
-	 */
-	private Timetable() {
-	}
-
-	/**
 	 * CSVデータ1行分からコンストラクト
 	 * CSV形式の文字列をバラして個別データとして登録する
 	 */
 	public Timetable(String csvRecord) {
-		this();
 		this.csvRecord = csvRecord;
 
 		String[] ar = csvRecord.split(",");
@@ -71,17 +64,4 @@ public class Timetable {
 		}
 		return ret;
 	}
-
-	/**
-	 * 合計得点表示用文字列を作成する
-	 */
-	public String getRowData() {
-		StringBuffer sb = new StringBuffer();
-		// sb.append(group + "組 ");
-		// sb.append(String.format("%2d番 ", number));
-		// sb.append(String.format("%-10s ", name));
-		// sb.append(String.format("%3d点", totalScore));
-		return sb.toString().replaceAll(" ", "&nbsp;");
-	}
-
 }
