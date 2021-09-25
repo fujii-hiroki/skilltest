@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+  <title>TOP</title>
+  <style>
+    body {
+      margin: 2rem;
+      font-size: 1.5rem;
+    }
+    img {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+    li + li{
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <ul class="header">
+    <li>
+      <a href="/score">点数課題</a>
+      <img th:src="@{/score.png}">
+    </li>
+    <li>
+      <a href="/timetable">時刻表課題</a>
+      <img th:src="@{/calendar.png}">
+    </li>
+  </ol>
+</body>
+</html>

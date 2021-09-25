@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+  <title>時刻表</title>
+  <style>
+    .header {
+      border-bottom: 1px #eee solid;
+    }
+    .header a {
+      margin: 0;
+      display: inline-block;
+    }
+    .header .title {
+      font-size: 1.5rem;
+    }
+    img {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+    .pane-wrapper {
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .left-pane {
+      width: 16rem;
+      border-right:1px #eee solid;
+      vertical-align: top;
+    }
+    .right-pane {
+      width: calc(100% - 16rem - 8px);  /* body の margin 分も引く */
+      vertical-align: top;
+    }
+    form {
+      margin: 10px 0;
+    }
+    .note {
+      font-size: 0.8em;
+      margin: 2px 0 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <a class="title" href="/timetable">時刻表課題</a>
+    <img th:src="@{/calendar.png}">
+    <a href="/" style="float:right;">TOPへ</a>
+  </div>
+
+  <div class="pane-wrapper left-pane">
+    <form action="/timetable/csv">
+      <input type="submit" value="CSV">
+      <p class="note">作成したCSVファイルをそのまま表示する</p>
+    </form>
+    <form action="/timetable/bydate">
+      <input type="date" name="date" th:value="${initialDate}">
+      <input type="submit" value="日付指定">
+      <p class="note">日付を指定し、その時刻表を表示する（祝日は考慮しない）</p>
+    </form>
+    <form action="/timetable/recent">
+      <select name="weekday">
+        <option value="weekday" th:selected="${initialWeekday} == 'weekday'">平日</option>
+        <option value="weekend" th:selected="${initialWeekday} == 'weekend'">土日祝日</option>
+      </select>
+      <input type="time" name="time" th:value="${initialTime}">
+      <input type="submit" value="直近3つ">
+      <p class="note">指定時刻から直近3つの出発時刻を表示する（終電が含まれる場合、3未満の表示も可）</p>
+    </form>
+  </div>
+
+  <div class="pane-wrapper right-pane">
+    【結果】
+    <p>
+      <span th:text="${result}"></span>
+    </p>
+    <p>
+      <span th:utext="${unsanitizedResult}"></span>
+    </p>
+  </div>
+
+
+</body>
+</html>

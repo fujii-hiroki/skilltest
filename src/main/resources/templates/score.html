@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+  <title>点数</title>
+  <style>
+    .header {
+      border-bottom: 1px #eee solid;
+    }
+    .header a {
+      margin: 0;
+      display: inline-block;
+    }
+    .header .title {
+      font-size: 1.5rem;
+    }
+    img {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+    .pane-wrapper {
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .left-pane {
+      width: 16rem;
+      border-right:1px #eee solid;
+      vertical-align: top;
+    }
+    .right-pane {
+      width: calc(100% - 16rem - 8px);  /* body の margin 分も引く */
+      vertical-align: top;
+    }
+    form {
+      margin: 10px 0;
+    }
+    .note {
+      font-size: 0.8em;
+      margin: 2px 0 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <a class="title" href="/score">点数課題</a>
+    <img th:src="@{/score.png}">
+    <a href="/" style="float:right;">TOPへ</a>
+  </div>
+
+  <div class="pane-wrapper left-pane">
+    <form action="/score/total">
+      <input type="submit" value="個人の合計点">
+      <p class="note">※各個人の合計点を表示する。順不同</p>
+    </form>
+    <form action="/score/average">
+      <input type="submit" value="グループの人数と科目毎の平均点">
+      <p class="note">各グループの有効人数（NA以外）と科目毎の平均点を表示する</p>
+    </form>
+    <form action="/score/ranking">
+      <input type="submit" value="合計点の上位10名">
+      <p class="note">合計点の上位10名を表示する。同点数の場合、組の昇順→出席番号の昇順で決定する</p>
+    </form>
+  </div>
+
+  <div class="pane-wrapper right-pane">
+    【結果】
+    <p>
+      <span th:text="${result}"></span>
+    </p>
+    <p>
+      <span th:utext="${unsanitizedResult}"></span>
+    </p>
+  </div>
+
+
+</body>
+</html>
