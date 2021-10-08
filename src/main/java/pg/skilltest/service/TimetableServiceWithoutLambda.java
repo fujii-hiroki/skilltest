@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import pg.skilltest.data.Timetable;
 import pg.skilltest.helper.FileManager;
 
 @Service
-public class TimetableService {
+public class TimetableServiceWithoutLambda {
 
 	@Autowired
 	FileManager fileManager;
@@ -35,15 +34,17 @@ public class TimetableService {
 	 */
 	public List<String> getByDate(LocalDate date) {
 		Map<Integer, List<Timetable>> timetableMap = createTimetableMap(date);
-		return timetableMap.keySet().stream()
-		  .map(key -> {
-				List<Timetable> list = timetableMap.get(key);
-				List<String> minuteList = list.stream()
-					.map(t -> String.valueOf(t.getMin()))
-					.collect(Collectors.toList());
-				return key + " | " + String.join(" ", minuteList);
-			})
-			.collect(Collectors.toList());
+		List<Integer> hourList = new ArrayList<>(timetableMap.keySet());
+		List<String> resultList = new ArrayList<>();
+		for(int hour : hourList) {
+			List<Timetable> timetableList = timetableMap.get(hour);
+			List<String> minuteList = new ArrayList<>();
+			for(Timetable tt : timetableList) {
+				minuteList.add(String.valueOf(tt.getMin()));
+			}
+			resultList.add(hour + " | " + String.join(" ", minuteList));
+		}
+		return resultList;
 	}
 
 	/**
@@ -52,23 +53,28 @@ public class TimetableService {
 	private final static int TOP_LIMIT = 3;
 	public List<String> getRecent(String weekdayValue, LocalTime time) {
 		List<Timetable> filteredList = getFilteredList(isWeekend(weekdayValue));
-		List<String> retList = filteredList.stream()
-		  .sorted(Comparator.comparing(Timetable::getTime))  // 時間の昇順
-			.filter(t -> {
-				return t.getTime().isAfter(time);
-			})
-			.limit(TOP_LIMIT)
-		  .map(t -> t.getTime().toString())
-			.collect(Collectors.toList());
 
-		if(retList.size() > 0) { return retList; }
+		// 時間の昇順
+		filteredList.sort(Comparator.comparing(Timetable::getTime));
+
+		List<String> resultList = new ArrayList<>();
+		for(Timetable tt : filteredList) {
+			if(tt.getTime().isAfter(time)) {
+				resultList.add(tt.getTime().toString());
+			}
+			if(resultList.size() == TOP_LIMIT) {
+				break;
+			}
+		}
+
+		if(resultList.size() > 0) { return resultList; }
 
 		// 1つも取得できない場合は終電後の時間と見做し、始発からの時刻を取得
-		return filteredList.stream()
-		  .sorted(Comparator.comparing(Timetable::getTime))
-			.limit(TOP_LIMIT)
-		  .map(t -> t.getTime().toString())
-			.collect(Collectors.toList());
+		for(int ii = 0; ii < TOP_LIMIT; ii++) {
+			resultList.add(filteredList.get(ii).getTime().toString());
+		}
+
+		return resultList;
 	}
 
 	// ----- 以下 private メソッド -----
@@ -98,11 +104,16 @@ public class TimetableService {
 	 */
 	private List<Timetable> getFilteredList(boolean isWeekend) {
 		List<Timetable> timetables = getTimetableList();
-		return timetables.stream()
-			.filter(t -> {
-				return isWeekend? t.isWeekendData() : t.isWeekdayData();
-			})
-			.collect(Collectors.toList());
+		List<Timetable> resultList = new ArrayList<>();
+		for(Timetable tt : timetables) {
+			if(isWeekend && tt.isWeekendData()) {
+				resultList.add(tt);
+			}
+			else if(!isWeekend && tt.isWeekdayData()) {
+				resultList.add(tt);
+			}
+		}
+		return resultList;
   }
 
 	/**
@@ -127,12 +138,14 @@ public class TimetableService {
 	 * ヘッダは含めない
 	 */
 	private List<Timetable> getTimetableList() {
-		return fileManager.readTimetableCsv().stream()
-			.map(line -> {
-				// 1行のデータからインスタンスを作成する
-				return new Timetable(line);
-			})
-			.filter(table -> table.isValidData())  // ヘッダを除外
-			.collect(Collectors.toList());
+		List<String> csvLineList = fileManager.readTimetableCsv();
+		List<Timetable> resultList = new ArrayList<>();
+		for(String line : csvLineList) {
+			Timetable tt = new Timetable(line);
+			if(tt.isValidData()) {
+				resultList.add(tt);
+			}
+		}
+		return resultList;
 	}
 }
