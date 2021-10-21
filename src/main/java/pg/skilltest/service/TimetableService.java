@@ -55,7 +55,7 @@ public class TimetableService {
 		List<String> retList = filteredList.stream()
 		  .sorted(Comparator.comparing(Timetable::getTime))  // 時間の昇順
 			.filter(t -> {
-				return t.getTime().isAfter(time);
+				return isTimeEqualOrAfter(t.getTime(), time);
 			})
 			.limit(TOP_LIMIT)
 		  .map(t -> t.getTime().toString())
@@ -120,6 +120,14 @@ public class TimetableService {
 	private final static String WEEKEND_PARAM_VALUE = "weekend";
 	private boolean isWeekend(String strValue) {
 		return WEEKEND_PARAM_VALUE.equals(strValue);
+	}
+
+	/**
+	 * t2がt1と同じまたは後であることを確認する
+	 * （＝t2がt1より前ではないことを確認する）
+	 */
+	private boolean isTimeEqualOrAfter(LocalTime t1, LocalTime t2) {
+		return !t1.isBefore(t2);
 	}
 
 	/**

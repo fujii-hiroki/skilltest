@@ -59,7 +59,7 @@ public class TimetableServiceWithoutLambda {
 
 		List<String> resultList = new ArrayList<>();
 		for(Timetable tt : filteredList) {
-			if(tt.getTime().isAfter(time)) {
+			if(isTimeEqualOrAfter(tt.getTime(), time)) {
 				resultList.add(tt.getTime().toString());
 			}
 			if(resultList.size() == TOP_LIMIT) {
@@ -131,6 +131,14 @@ public class TimetableServiceWithoutLambda {
 	private final static String WEEKEND_PARAM_VALUE = "weekend";
 	private boolean isWeekend(String strValue) {
 		return WEEKEND_PARAM_VALUE.equals(strValue);
+	}
+
+	/**
+	 * t2がt1と同じまたは後であることを確認する
+	 * （＝t2がt1より前ではないことを確認する）
+	 */
+	private boolean isTimeEqualOrAfter(LocalTime t1, LocalTime t2) {
+		return !t1.isBefore(t2);
 	}
 
 	/**
