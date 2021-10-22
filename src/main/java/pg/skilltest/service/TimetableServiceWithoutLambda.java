@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pg.skilltest.data.Timetable;
+import pg.skilltest.data.DepartureTime;
 import pg.skilltest.helper.FileManager;
 
 @Service
@@ -33,13 +33,13 @@ public class TimetableServiceWithoutLambda {
 	 * 指定された日付の時刻表を表示する
 	 */
 	public List<String> getByDate(LocalDate date) {
-		Map<Integer, List<Timetable>> timetableMap = createTimetableMap(date);
+		Map<Integer, List<DepartureTime>> timetableMap = createTimetableMap(date);
 		List<Integer> hourList = new ArrayList<>(timetableMap.keySet());
 		List<String> resultList = new ArrayList<>();
 		for(int hour : hourList) {
-			List<Timetable> timetableList = timetableMap.get(hour);
+			List<DepartureTime> timetableList = timetableMap.get(hour);
 			List<String> minuteList = new ArrayList<>();
-			for(Timetable tt : timetableList) {
+			for(DepartureTime tt : timetableList) {
 				minuteList.add(String.valueOf(tt.getMin()));
 			}
 			resultList.add(hour + " | " + String.join(" ", minuteList));
@@ -52,13 +52,13 @@ public class TimetableServiceWithoutLambda {
 	 */
 	private final static int TOP_LIMIT = 3;
 	public List<String> getRecent(String weekdayValue, LocalTime time) {
-		List<Timetable> filteredList = getFilteredList(isWeekend(weekdayValue));
+		List<DepartureTime> filteredList = getFilteredList(isWeekend(weekdayValue));
 
 		// 時間の昇順
-		filteredList.sort(Comparator.comparing(Timetable::getTime));
+		filteredList.sort(Comparator.comparing(DepartureTime::getTime));
 
 		List<String> resultList = new ArrayList<>();
-		for(Timetable tt : filteredList) {
+		for(DepartureTime tt : filteredList) {
 			if(isTimeEqualOrAfter(tt.getTime(), time)) {
 				resultList.add(tt.getTime().toString());
 			}
@@ -83,11 +83,11 @@ public class TimetableServiceWithoutLambda {
 	 * 時刻表から時間でグルーピングしたMapを作る
 	 * Map<時間(hour), 時刻> 形式を返却する
 	 */
-	private Map<Integer, List<Timetable>> createTimetableMap(LocalDate date) {
+	private Map<Integer, List<DepartureTime>> createTimetableMap(LocalDate date) {
 		// キー（時間）でソートしたいため、TreeMapを使用する
-		Map<Integer, List<Timetable>> timetableMap = new TreeMap<>();
+		Map<Integer, List<DepartureTime>> timetableMap = new TreeMap<>();
 
-		for(Timetable timetable : getFilteredList(isWeekend(date))) {
+		for(DepartureTime timetable : getFilteredList(isWeekend(date))) {
 			int hour = timetable.getHour();
 			if(!timetableMap.containsKey(hour)) {
 				// 未作成の場合
@@ -102,10 +102,10 @@ public class TimetableServiceWithoutLambda {
 	/**
 	 * 平日のデータか週末のデータでフィルタ
 	 */
-	private List<Timetable> getFilteredList(boolean isWeekend) {
-		List<Timetable> timetables = getTimetableList();
-		List<Timetable> resultList = new ArrayList<>();
-		for(Timetable tt : timetables) {
+	private List<DepartureTime> getFilteredList(boolean isWeekend) {
+		List<DepartureTime> timetables = getTimetableList();
+		List<DepartureTime> resultList = new ArrayList<>();
+		for(DepartureTime tt : timetables) {
 			if(isWeekend && tt.isWeekendData()) {
 				resultList.add(tt);
 			}
@@ -145,11 +145,11 @@ public class TimetableServiceWithoutLambda {
 	 * 時刻表リストを作成する。
 	 * ヘッダは含めない
 	 */
-	private List<Timetable> getTimetableList() {
+	private List<DepartureTime> getTimetableList() {
 		List<String> csvLineList = fileManager.readTimetableCsv();
-		List<Timetable> resultList = new ArrayList<>();
+		List<DepartureTime> resultList = new ArrayList<>();
 		for(String line : csvLineList) {
-			Timetable tt = new Timetable(line);
+			DepartureTime tt = new DepartureTime(line);
 			if(tt.isValidData()) {
 				resultList.add(tt);
 			}

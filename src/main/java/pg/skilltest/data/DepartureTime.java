@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import lombok.Data;
 
 @Data
-public class Timetable {
+public class DepartureTime {
 
 	/** オリジナルデータ */
 	private String csvRecord;
@@ -30,7 +30,7 @@ public class Timetable {
 	 * CSVデータ1行分からコンストラクト
 	 * CSV形式の文字列をバラして個別データとして登録する
 	 */
-	public Timetable(String csvRecord) {
+	public DepartureTime(String csvRecord) {
 		this.csvRecord = csvRecord;
 
 		String[] ar = csvRecord.split(",");
