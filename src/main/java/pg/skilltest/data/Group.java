@@ -49,7 +49,7 @@ public class Group {
 	 */
 	public String getAverageScoreString() {
 		int num = studentList.size();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(group + "組");
 		sb.append(String.format("（%d人） ", num));
 		sb.append(String.format("英：%.1f ｜", englishScore / num));

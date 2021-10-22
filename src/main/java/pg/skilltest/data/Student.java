@@ -88,7 +88,7 @@ public class Student {
 	 * 合計得点表示用文字列を作成する
 	 */
 	public String getTotalScoreString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(group + "組 ");
 		sb.append(String.format("%2d番 ", number));
 		sb.append(String.format("%-10s ", name));
